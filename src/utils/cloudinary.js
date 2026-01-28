@@ -11,7 +11,6 @@ cloudinary.config({
 const uploadoncloudinary = async (filePath) => {
   try {
     if (!fs.existsSync(filePath)) {
-      throw new Error("File does not exist");
       return null;
     }
     const responce = await cloudinary.uploader.upload(filePath, {
@@ -23,7 +22,7 @@ const uploadoncloudinary = async (filePath) => {
   } catch (error) {
     fs.unlinkSync(filePath); //delete the file from local storage as the upload failed
     console.error("Error uploading file to Cloudinary", error);
-    throw error;
+    return null;
   }
 };
 
