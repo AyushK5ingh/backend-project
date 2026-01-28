@@ -18,7 +18,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
   const { fullname, email, username, password } = req.body;
   console.log("email:", email);
-  console.log("fullname",fullname)
+  console.log("fullname", fullname);
   //   if(fullname=="")
   //   {
   //     throw new ApiError(400, "FULLNAME IS REQUIRED")
@@ -35,23 +35,26 @@ const registerUser = asyncHandler(async (req, res, next) => {
   });
   if (existedUser) {
     throw new ApiError(409, "usr and mail exist");
+  } console.log(req.files?.avatar[0]?.path);
+
+  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  const coverLocalPath = req.files?.coverImage?.[0]?.path;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Wait avatar is required");
   }
 
-  const avatarLoacalPath = req.files?.avatar[0]?.path;
-  const coverLocalPath = req.files?.avator[0]?.path;
-
-  if (!avatarLoacalPath) {
-    throw new ApiError(400, "avatar is must");
-  }
-  const avatar = await uploadoncloudinary(avatarLoacalPath);
-  const coverImage = await uploadoncloudinary(coverLocalPath);
+  const avatar = await uploadoncloudinary(avatarLocalPath);
+  const coverImage = coverLocalPath
+    ? await uploadoncloudinary(coverLocalPath)
+    : null;
 
   if (!avatar) {
     throw new ApiError(400, "avatar is must");
   }
 
   const user = await User.create({
-    fullName,
+    fullName: fullname,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
     email,
@@ -63,13 +66,13 @@ const registerUser = asyncHandler(async (req, res, next) => {
     "-password -refreshToken"
   );
 
-  if (!createdUser) {
+  if (!CreatedUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
 
-  return res.status(201).json(
-    new ApiResponse(200, CreatedUser, "User Registered Successfully")
-  )
+  return res
+    .status(201)
+    .json(new ApiResponse(200, CreatedUser, "User Registered Successfully"));
 });
 
 export { registerUser };
