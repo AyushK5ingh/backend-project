@@ -1,4 +1,4 @@
-# pata nhi bhai dekhte hai
+# learning/revicing backend with hitesh
 
 # chai aur backend  series 
 
