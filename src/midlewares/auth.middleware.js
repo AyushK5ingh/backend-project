@@ -2,8 +2,8 @@ import { ApiError } from "../utils/apierror";
 import { asyncHandler } from "../utils/asynchandler";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model";
-// can write _ if res is not used
 
+// can write _ if res is not used
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const token =
